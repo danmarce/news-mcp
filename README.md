@@ -51,3 +51,13 @@ against the same `/data` volume (or set `NEWS_REFRESH_MINUTES` on the server and
 { "mcpServers": { "news": { "type": "streamable-http", "url": "http://news-mcp:8000/mcp",
   "headers": { "Authorization": "Bearer ${NEWS_MCP_TOKEN}" } } } }
 ```
+
+## AI assistance
+news-mcp is developed openly with the help of Claude (Anthropic). We state this plainly: commits
+Claude helped write carry a `Co-Authored-By: Claude` trailer. The code and design are open source so the
+work can be inspected, reused, and given back.
+
+## License
+Code: [MPL-2.0](LICENSE). The repo ships only feed *URLs*; the news content it fetches belongs to each publisher and
+stays in your local database. Respect each feed's terms, keep the refresh interval polite (≥30 min), and set
+`NEWS_USER_AGENT` to identify your own deployment.

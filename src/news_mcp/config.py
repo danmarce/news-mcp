@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from importlib.resources import files
 from pathlib import Path
 
-DEFAULT_USER_AGENT = "news-mcp/0.1 (personal homelab RSS reader; polls politely with conditional GET)"
+DEFAULT_USER_AGENT = "news-mcp/0.1 (+https://github.com/danmarce/news-mcp)"
 
 
 @dataclass(frozen=True)

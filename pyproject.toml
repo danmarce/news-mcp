@@ -5,6 +5,8 @@ description = "Curated RSS/Atom/RDF news -> SQLite -> structured MCP tools"
 authors = [
     { name = "Daniel Nunez", email = "danmarce@gmail.com" }
 ]
+license = "MPL-2.0"
+license-files = ["LICENSE"]
 requires-python = ">=3.12"
 dependencies = [
     "feedparser>=6.0.14",
