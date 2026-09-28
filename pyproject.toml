@@ -1,0 +1,25 @@
+[project]
+name = "news-mcp"
+version = "0.1.0"
+description = "Curated RSS/Atom/RDF news -> SQLite -> structured MCP tools"
+authors = [
+    { name = "Daniel Nunez", email = "danmarce@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "feedparser>=6.0.14",
+    "httpx>=0.28.1",
+    "mcp>=1.12",
+]
+
+[project.scripts]
+news-mcp = "news_mcp:main"
+
+[build-system]
+requires = ["uv_build>=0.12.19,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]

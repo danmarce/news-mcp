@@ -1,0 +1,181 @@
+# Curated feed list — the editorial mix is the point (see CLAUDE.md).
+# Each [[feed]]: source (stable id, PK), name, url, lang (ISO 639-1), country (ISO 3166 alpha-2 or "INT"),
+# category (general|politics|science|tech|sport|economy), active (default true).
+# Verified 2026-09-27 with curl (HTTP 200 + XML content type) unless noted.
+# Override the whole list in deployment with NEWS_FEEDS=/path/to/feeds.toml.
+
+# --- Ecuador -----------------------------------------------------------------
+[[feed]]
+source = "elcomercio"
+name = "El Comercio"
+url = "https://www.elcomercio.com/feed/"
+lang = "es"
+country = "EC"
+category = "general"
+
+[[feed]]
+source = "eluniverso"
+name = "El Universo"
+url = "https://www.eluniverso.com/arc/outboundfeeds/rss/?outputType=xml"
+lang = "es"
+country = "EC"
+category = "general"
+
+[[feed]]
+# 2026-09-27: /rss/home.xml times out, /feed/ returns HTML. Re-check later.
+source = "primicias"
+name = "Primicias"
+url = "https://www.primicias.ec/rss/home.xml"
+lang = "es"
+country = "EC"
+category = "general"
+active = false
+
+# --- Spanish-language international -----------------------------------------
+[[feed]]
+source = "bbc-mundo"
+name = "BBC News Mundo"
+url = "https://feeds.bbci.co.uk/mundo/rss.xml"
+lang = "es"
+country = "GB"
+category = "general"
+
+[[feed]]
+source = "dw-es"
+name = "DW Español"
+url = "https://rss.dw.com/rdf/rss-sp-all"
+lang = "es"
+country = "DE"
+category = "general"
+
+[[feed]]
+source = "elpais"
+name = "El País (portada)"
+url = "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada"
+lang = "es"
+country = "ES"
+category = "general"
+
+[[feed]]
+source = "france24-es"
+name = "France 24 Español"
+url = "https://www.france24.com/es/rss"
+lang = "es"
+country = "FR"
+category = "general"
+
+# --- Original-language outlets (richer than foreigner-facing editions) -------
+[[feed]]
+source = "dw-de"
+name = "DW Deutsch"
+url = "https://rss.dw.com/rdf/rss-de-all"
+lang = "de"
+country = "DE"
+category = "general"
+
+[[feed]]
+source = "lemonde"
+name = "Le Monde (à la une)"
+url = "https://www.lemonde.fr/rss/une.xml"
+lang = "fr"
+country = "FR"
+category = "general"
+
+[[feed]]
+source = "france24-fr"
+name = "France 24"
+url = "https://www.france24.com/fr/rss"
+lang = "fr"
+country = "FR"
+category = "general"
+
+[[feed]]
+source = "aljazeera-ar"
+name = "الجزيرة (Al Jazeera Arabic)"
+url = "https://www.aljazeera.net/aljazeerarss/a7c186be-1baa-4bd4-9d80-a84db769f779/73d0e1b4-532f-45ef-b135-bfdff8b8cab9"
+lang = "ar"
+country = "QA"
+category = "general"
+
+[[feed]]
+source = "nhk"
+name = "NHK ニュース"
+url = "https://news.web.nhk/n-data/conf/na/rss/cat0.xml"
+lang = "ja"
+country = "JP"
+category = "general"
+
+# --- English -----------------------------------------------------------------
+[[feed]]
+source = "bbc-news"
+name = "BBC News"
+url = "https://feeds.bbci.co.uk/news/rss.xml"
+lang = "en"
+country = "GB"
+category = "general"
+
+[[feed]]
+source = "aljazeera-en"
+name = "Al Jazeera English"
+url = "https://www.aljazeera.com/xml/rss/all.xml"
+lang = "en"
+country = "QA"
+category = "general"
+
+[[feed]]
+source = "nyt-politics"
+name = "NYT Politics"
+url = "https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/politics/rss.xml"
+lang = "en"
+country = "US"
+category = "politics"
+
+[[feed]]
+source = "economist-intl"
+name = "The Economist — International"
+url = "https://www.economist.com/international/rss.xml"
+lang = "en"
+country = "GB"
+category = "economy"
+
+# --- Science / tech ----------------------------------------------------------
+[[feed]]
+source = "newscientist"
+name = "New Scientist"
+url = "https://www.newscientist.com/feed/"
+lang = "en"
+country = "GB"
+category = "science"
+
+[[feed]]
+source = "quanta"
+name = "Quanta Magazine"
+url = "https://www.quantamagazine.org/feed/"
+lang = "en"
+country = "US"
+category = "science"
+
+[[feed]]
+source = "arstechnica"
+name = "Ars Technica"
+url = "https://feeds.arstechnica.com/arstechnica/index"
+lang = "en"
+country = "US"
+category = "tech"
+
+[[feed]]
+source = "hackernews"
+name = "Hacker News (front page)"
+url = "https://news.ycombinator.com/rss"
+lang = "en"
+country = "INT"
+category = "tech"
+
+# --- Sport (news; scores/standings live in football-mcp) ---------------------
+[[feed]]
+source = "ole-intl"
+name = "Olé — Fútbol internacional"
+url = "https://www.ole.com.ar/rss/futbol-internacional/"
+lang = "es"
+country = "AR"
+category = "sport"
