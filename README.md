@@ -44,9 +44,30 @@ uv run pytest
 }
 ```
 
-## Homelab (mcpo → OWUI)
-Image: `docker build -t news-mcp .` — default CMD serves HTTP on :8000 at `/mcp`; run `news-mcp refresh` from a timer
-against the same `/data` volume (or set `NEWS_REFRESH_MINUTES` on the server and skip the timer). mcpo entry:
+## Docker Compose (e.g. mcpo → Open WebUI)
+Build the image with `docker build -t news-mcp .`. By default it serves HTTP on :8000 at `/mcp`, with an open
+`/healthz` endpoint for the built-in healthcheck.
+```yaml
+services:
+  news-mcp:
+    image: news-mcp:latest
+    restart: unless-stopped
+    environment:
+      NEWS_MCP_TOKEN: ${NEWS_MCP_TOKEN}      # put it in .env; clients send "Authorization: Bearer <token>"
+      NEWS_REFRESH_MINUTES: "45"             # refresh at startup, then every 45 min (no timer needed)
+      NEWS_USER_AGENT: "news-mcp/0.1 (+https://example.org/your-contact)"   # identify your deployment
+      # NEWS_FEEDS: /config/feeds.toml       # use your own curated list
+    volumes:
+      - news-data:/data                      # SQLite; local disk, not NFS/SMB
+      # - ./feeds.toml:/config/feeds.toml:ro
+    # ports: ["8000:8000"]                   # only if clients live outside this compose network
+volumes:
+  news-data:
+```
+If you'd rather use a host timer, leave `NEWS_REFRESH_MINUTES` unset and have the timer run
+`docker compose run --rm news-mcp refresh`. It uses the same `/data` volume.
+
+mcpo entry (from a container on the same network):
 ```json
 { "mcpServers": { "news": { "type": "streamable-http", "url": "http://news-mcp:8000/mcp",
   "headers": { "Authorization": "Bearer ${NEWS_MCP_TOKEN}" } } } }
