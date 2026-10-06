@@ -30,7 +30,13 @@ intentional - it lets you compare framing. Only title + summary are available (n
 give the `link` when the user wants more.
 """
 
-READ_ONLY = ToolAnnotations(readOnlyHint=True, openWorldHint=False)
+# Explicit MCP hints on every tool (omitted hints default to the worst case: destructive + open-world).
+# All tools only query this server's own SQLite store - fetching feeds is the separate refresh job, never a
+# tool call - so they are read-only, non-destructive, idempotent and closed-world. The human-readable title
+# goes in both Tool.title and annotations.title (older clients read the latter).
+def _read_hints(title: str) -> ToolAnnotations:
+    return ToolAnnotations(title=title, readOnlyHint=True, destructiveHint=False, idempotentHint=True,
+                           openWorldHint=False)
 
 
 def _out(obj: dict[str, Any]) -> str:
@@ -85,7 +91,7 @@ def build_server(settings: Settings) -> MCPServer:
     def db() -> closing[sqlite3.Connection]:
         return closing(connect(settings.db_path))
 
-    @mcp.tool(annotations=READ_ONLY, structured_output=False)
+    @mcp.tool(title="Latest news", annotations=_read_hints("Latest news"), structured_output=False)
     def latest_news(
         source: str | None = None,
         lang: str | None = None,
@@ -115,7 +121,7 @@ def build_server(settings: Settings) -> MCPServer:
             rows = conn.execute(sql, [*params, min(max(n, 1), MAX_ITEMS)]).fetchall()
         return _out({"count": len(rows), "items": [_item(r, 280) for r in rows]})
 
-    @mcp.tool(annotations=READ_ONLY, structured_output=False)
+    @mcp.tool(title="Search news by topic", annotations=_read_hints("Search news by topic"), structured_output=False)
     def news_by_topic(query: str, days: float = 7, lang: str | None = None, n: int = 20) -> str:
         """Search recent headlines + summaries by keyword, newest first. Use for "news about X",
         "what happened with X this week".
@@ -142,7 +148,7 @@ def build_server(settings: Settings) -> MCPServer:
             rows = conn.execute(sql, [*params, min(max(n, 1), MAX_ITEMS)]).fetchall()
         return _out({"query": query, "count": len(rows), "items": [_item(r, 500) for r in rows]})
 
-    @mcp.tool(annotations=READ_ONLY, structured_output=False)
+    @mcp.tool(title="Compare coverage across outlets", annotations=_read_hints("Compare coverage across outlets"), structured_output=False)
     def compare_coverage(topic: str, days: float = 7, per_source: int = 3) -> str:
         """How different outlets/countries covered one story - for framing comparison ("compare how the
         German, Qatari, US and Ecuadorian press covered X"). Returns matching items grouped by outlet, plus
@@ -182,7 +188,7 @@ def build_server(settings: Settings) -> MCPServer:
         return _out({"topic": topic, "outlets_covering": len(groups), "coverage": list(groups.values()),
                      "no_matching_items": silent})
 
-    @mcp.tool(annotations=READ_ONLY, structured_output=False)
+    @mcp.tool(title="List news sources", annotations=_read_hints("List news sources"), structured_output=False)
     def sources() -> str:
         """List the curated feeds: id, outlet name, language, country, category, whether active, when it was
         last refreshed successfully, and how many items it currently holds. Use to know which ids/filters

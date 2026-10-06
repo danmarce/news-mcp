@@ -73,6 +73,16 @@ mcpo entry (from a container on the same network):
   "headers": { "Authorization": "Bearer ${NEWS_MCP_TOKEN}" } } } }
 ```
 
+## Auth and exposure
+The server is deliberately simple about auth: stdio, or streamable-HTTP with a single bearer token
+(`NEWS_MCP_TOKEN`) for a private network, e.g. behind mcpo. It has **no OAuth, no users and no audit log**, by
+design. To publish it more widely (at work or on the internet), put a management layer in front of it: an MCP
+gateway or auth proxy that handles OAuth, users and audit for all your servers at once.
+
+Every tool declares a `title` and all four MCP hints. They are all read-only, non-destructive, idempotent and
+closed-world, because tools only query the local SQLite store and only the refresh job touches the network.
+Hints are advisory for clients and directories; they don't replace the bearer token or a gateway.
+
 ## AI assistance
 news-mcp is developed openly with the help of Claude (Anthropic). We state this plainly: commits
 Claude helped write carry a `Co-Authored-By: Claude` trailer. The code and design are open source so the

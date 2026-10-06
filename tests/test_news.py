@@ -77,6 +77,19 @@ def call(server, name, args):
     return json.loads(content[0].text)
 
 
+def test_every_tool_declares_title_and_all_four_hints(server):
+    tools = asyncio.run(server.list_tools())
+    assert {t.name for t in tools} == {"latest_news", "news_by_topic", "compare_coverage", "sources"}
+    for t in tools:
+        wire = t.annotations.model_dump(by_alias=True)  # the camelCase JSON a client/directory actually reads
+        for hint in ("readOnlyHint", "destructiveHint", "idempotentHint", "openWorldHint"):
+            assert isinstance(wire.get(hint), bool), f"{t.name}.{hint} unset"
+        assert t.title and wire.get("title") == t.title, f"{t.name} missing title"
+        # all tools only read the local store; feeds are pulled by the refresh job, never by a tool
+        assert wire["readOnlyHint"] and wire["idempotentHint"], t.name
+        assert not wire["destructiveHint"] and not wire["openWorldHint"], t.name
+
+
 def test_latest_news_filters_and_window(server):
     assert [i["source"] for i in call(server, "latest_news", {})["items"]] == ["elcomercio", "dw-de"]
     assert call(server, "latest_news", {"lang": "DE"})["items"][0]["outlet"] == "DW Deutsch"
